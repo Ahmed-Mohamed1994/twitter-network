@@ -1,3 +1,12 @@
 .new-profile-image {
     padding-top: 10px;
 }
+
+.new-post {
+    padding: 16px 0;
+}
+
+.account-view-btn {
+    clear: both;
+    padding-top: 20px;
+}

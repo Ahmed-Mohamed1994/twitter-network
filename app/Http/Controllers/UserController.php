@@ -119,4 +119,21 @@ class UserController extends Controller
     public function getActivityFeed(){
         return view('activity_feed');
     }
+
+    public function getSearchUsername(Request $request) {
+        $this->validate($request, [
+            'username' => 'required|max:150|alpha_dash'
+        ]);
+        $username = $request['username'];
+        $search_user = User::where('username', $username)->first();
+        if($search_user){
+            return view('account_user_search' , ['user_search' => $search_user]);
+        }else{
+            return redirect()->route('dashboard')->with(['message_err' => 'Username Not Found!']);;
+        }
+    }
+
+    public function getUserAccount(User $userId){
+        return view('user_account' , ['user_account' => $userId]);
+    }
 }

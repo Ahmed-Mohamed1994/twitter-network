@@ -68,4 +68,16 @@ Route::group(['middleware' => ['web']], function () {
         'as' => 'activity-feed',
         'middleware' => 'auth'
     ]);
+
+    Route::post('/search', [
+        'uses' => 'UserController@getSearchUsername',
+        'as' => 'search.username',
+        'middleware' => 'auth'
+    ]);
+
+    Route::get('/account/{userId}', [
+        'uses' => 'UserController@getUserAccount',
+        'as' => 'user.account',
+        'middleware' => 'auth'
+    ]);
 });
