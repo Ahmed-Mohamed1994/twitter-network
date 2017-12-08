@@ -9,7 +9,7 @@
     <section class="row new-post">
         <div class="col-md-6">
             <header><h3>What do you have to say?</h3></header>
-            <form action="" method="post">
+            <form action="{{ route('create.tweet') }}" method="post">
                 <div class="form-group  {{ $errors->has('new-tweet') ? 'has-error' : '' }}">
                     <textarea class="form-control" name="new-tweet" id="new-tweet" rows="5"
                               placeholder="Your tweet">{{ Request::old('new-tweet') }}</textarea>

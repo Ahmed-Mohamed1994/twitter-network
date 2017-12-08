@@ -121,7 +121,7 @@ class UserController extends Controller
         return view('activity_feed');
     }
 
-    public function getSearchUsername(Request $request) {
+    public function postSearchUsername(Request $request) {
         $this->validate($request, [
             'username' => 'required|max:150|alpha_dash'
         ]);

@@ -70,7 +70,7 @@ Route::group(['middleware' => ['web']], function () {
     ]);
 
     Route::post('/search', [
-        'uses' => 'UserController@getSearchUsername',
+        'uses' => 'UserController@postSearchUsername',
         'as' => 'search.username',
         'middleware' => 'auth'
     ]);
@@ -90,6 +90,12 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/unfollow/{userId}', [
         'uses' => 'UserController@getUserUnFollow',
         'as' => 'user.unfollow',
+        'middleware' => 'auth'
+    ]);
+
+    Route::post('/create-tweet', [
+        'uses' => 'TweetController@postCreateTweet',
+        'as' => 'create.tweet',
         'middleware' => 'auth'
     ]);
 });
