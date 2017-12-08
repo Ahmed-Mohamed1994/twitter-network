@@ -11,6 +11,61 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+
+Route::group(['middleware' => ['web']], function () {
+    Route::get('/', [
+        'uses' => 'UserController@getHome',
+        'as' => 'login'
+    ]);
+
+    Route::post('/signup', [
+        'uses' => 'UserController@postSignUp',
+        'as' => 'signup'
+    ]);
+
+    Route::post('/signin', [
+        'uses' => 'UserController@postSignIn',
+        'as' => 'signin'
+    ]);
+
+    Route::get('/logout', [
+        'uses' => 'UserController@getLogout',
+        'as' => 'logout'
+    ]);
+
+    Route::get('/account', [
+        'uses' => 'UserController@getAccount',
+        'as' => 'account',
+        'middleware' => 'auth'
+    ]);
+
+    Route::post('/updateaccount',[
+        'uses' => 'UserController@postSaveAccount',
+        'as' => 'account.save',
+        'middleware' => 'auth'
+    ]);
+
+    Route::get('/userimage/{filename}',[
+        'uses' => 'UserController@getUserImage',
+        'as' => 'account.image',
+        'middleware' => 'auth'
+    ]);
+
+    Route::get('/dashboard', [
+        'uses' => 'UserController@getDashboard',
+        'as' => 'dashboard',
+        'middleware' => 'auth'
+    ]);
+
+    Route::get('/news_feed', [
+        'uses' => 'UserController@getNewsFeed',
+        'as' => 'news-feed',
+        'middleware' => 'auth'
+    ]);
+
+    Route::get('/activity_feed', [
+        'uses' => 'UserController@getActivityFeed',
+        'as' => 'activity-feed',
+        'middleware' => 'auth'
+    ]);
 });
