@@ -38,7 +38,7 @@
                         <a href="">Like</a> |
                         @if(Auth::user()->id == $tweet->userId) |
                         <a href="{{ route('get.edit.tweet',['tweetId' => $tweet->id]) }}">Edit</a> |
-                        <a href="">Delete</a>
+                        <a href="{{ route('get.delete.tweet',['tweetId' => $tweet->id]) }}">Delete</a>
                         @endif
                     </div>
                 </article>

@@ -110,4 +110,10 @@ Route::group(['middleware' => ['web']], function () {
         'as' => 'post.edit.tweet',
         'middleware' => 'auth'
     ]);
+
+    Route::get('/delete_tweet/{tweetId}', [
+        'uses' => 'TweetController@getDeleteTweet',
+        'as' => 'get.delete.tweet',
+        'middleware' => 'auth'
+    ]);
 });
