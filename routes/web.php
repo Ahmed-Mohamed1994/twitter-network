@@ -80,4 +80,16 @@ Route::group(['middleware' => ['web']], function () {
         'as' => 'user.account',
         'middleware' => 'auth'
     ]);
+
+    Route::get('/follow/{userId}', [
+        'uses' => 'UserController@getUserFollow',
+        'as' => 'user.follow',
+        'middleware' => 'auth'
+    ]);
+
+    Route::get('/unfollow/{userId}', [
+        'uses' => 'UserController@getUserUnFollow',
+        'as' => 'user.unfollow',
+        'middleware' => 'auth'
+    ]);
 });

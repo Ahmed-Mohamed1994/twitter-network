@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Follow;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -129,11 +130,31 @@ class UserController extends Controller
         if($search_user){
             return view('account_user_search' , ['user_search' => $search_user]);
         }else{
-            return redirect()->route('dashboard')->with(['message_err' => 'Username Not Found!']);;
+            return redirect()->route('dashboard')->with(['message_err' => 'Username Not Found!']);
         }
     }
 
     public function getUserAccount(User $userId){
-        return view('user_account' , ['user_account' => $userId]);
+        $followed_this_user = Follow::where(['userId' => Auth::user()->id , 'Follow_userId' => $userId->id])->first();
+        return view('user_account' , ['user_account' => $userId, 'followed_this_user' => $followed_this_user]);
+    }
+
+    public function getUserFollow($userId){
+        $user = Auth::user();
+        if($user->id == $userId) {
+            return redirect()->back()->with(['message_err' => 'Oh You can\'t follow yourself']);
+        }
+        $follow = new Follow();
+        $follow->userId = $user->id;
+        $follow->Follow_userId = $userId;
+        if($follow->save()){
+            return redirect()->route('user.account',['userId' => $userId])->with(['message' => 'Your are following this user']);
+        }
+    }
+
+    public function getUserUnFollow($userId){
+        $followed_this_user = Follow::where(['userId' => Auth::user()->id , 'Follow_userId' => $userId])->first();
+        $followed_this_user->delete();
+        return redirect()->route('user.account',['userId' => $userId])->with(['message' => 'Your are un follow this user']);
     }
 }
