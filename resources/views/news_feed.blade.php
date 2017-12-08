@@ -5,6 +5,7 @@
 @endsection
 
 @section('content')
+    @include('includes.message-block')
     <h1>People you are following</h1>
     <div class="row">
         @foreach($following_users as $user)
@@ -31,12 +32,12 @@
                 <article class="tweet" data-TweetId="{{ $tweet->id }}">
                     <p>{{ $tweet->body }}</p>
                     <div class="info">
-                        Posted by {{ Auth::user()->username }} on {{ $tweet->created_at }}
+                        Posted by {{ Auth::user()->username }} on {{ $tweet->created_at->toFormaTtedDateString() }}
                     </div>
                     <div class="interaction">
                         <a href="">Like</a> |
                         @if(Auth::user()->id == $tweet->userId) |
-                        <a href="">Edit</a> |
+                        <a href="{{ route('get.edit.tweet',['tweetId' => $tweet->id]) }}">Edit</a> |
                         <a href="">Delete</a>
                         @endif
                     </div>

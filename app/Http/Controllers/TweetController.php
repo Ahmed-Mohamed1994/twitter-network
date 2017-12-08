@@ -19,4 +19,22 @@ class TweetController extends Controller
             return redirect()->route('dashboard')->with(['message' => 'Your Tweet Successfully Created!']);
         }
     }
+
+    public function getEditTweet(Tweet $tweetId){
+        return view('edit_tweet')->with(['tweet' => $tweetId]);
+    }
+
+    public function postEditTweet(Request $request){
+        $this->validate($request, [
+            'new-tweet' => 'required|max:1000'
+        ]);
+        $tweet_id = $request['tweet_id'];
+        $tweet = Tweet::find($tweet_id);
+        if(!$tweet){
+            return redirect()->back()->with(['message_err' => 'Tweet Not Found!']);
+        }
+        $tweet->body = $request['new-tweet'];
+        $tweet->update();
+        return redirect()->route('news-feed')->with(['message' => 'Your tweet Successfully Updated!']);
+    }
 }

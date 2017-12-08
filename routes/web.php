@@ -98,4 +98,16 @@ Route::group(['middleware' => ['web']], function () {
         'as' => 'create.tweet',
         'middleware' => 'auth'
     ]);
+
+    Route::get('/edit_tweet/{tweetId}', [
+        'uses' => 'TweetController@getEditTweet',
+        'as' => 'get.edit.tweet',
+        'middleware' => 'auth'
+    ]);
+
+    Route::post('/create-tweet', [
+        'uses' => 'TweetController@PostEditTweet',
+        'as' => 'post.edit.tweet',
+        'middleware' => 'auth'
+    ]);
 });
