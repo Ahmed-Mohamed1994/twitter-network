@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Follow;
+use App\Tweet;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -114,7 +115,16 @@ class UserController extends Controller
     }
 
     public function getNewsFeed(){
-        return view('news_feed');
+        // get following users
+        $user_followed = Follow::where(['userId' => Auth::user()->id ])->get();
+        $following_users = array();
+        foreach ($user_followed as $user_select){
+            $get_user= User::where(['id' => $user_select->Follow_userId ])->first();
+            array_push($following_users, $get_user);
+        }
+        // get my own tweets
+        $tweets = Tweet::where(['userId' => Auth::user()->id ])->get();
+        return view('news_feed', ['following_users' => $following_users , 'tweets' => $tweets]);
     }
 
     public function getActivityFeed(){

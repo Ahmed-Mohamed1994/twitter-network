@@ -12,4 +12,8 @@ class User extends Model implements Authenticatable
     public function follows(){
         return $this->hasMany('App\Follow');
     }
+
+    public function tweets(){
+        return $this->hasMany('App\Tweet');
+    }
 }
