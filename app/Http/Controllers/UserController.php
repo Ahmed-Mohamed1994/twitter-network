@@ -123,7 +123,7 @@ class UserController extends Controller
             array_push($following_users, $get_user);
         }
         // get my own tweets
-        $tweets = Tweet::where(['userId' => Auth::user()->id ])->get();
+        $tweets = Tweet::where(['userId' => Auth::user()->id ])->orderBy('created_at' , 'desc')->get();
         return view('news_feed', ['following_users' => $following_users , 'tweets' => $tweets]);
     }
 

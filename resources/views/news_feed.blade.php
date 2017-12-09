@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-    twitter dashboard
+    twitter News Feed
 @endsection
 
 @section('content')
@@ -29,14 +29,14 @@
         <div class="col-md-6 col-md-offset-3">
             <header><h3>Your tweets</h3></header>
             @foreach($tweets as $tweet)
-                <article class="tweet" data-TweetId="{{ $tweet->id }}">
+                <article class="tweet" data-tweetid="{{ $tweet->id }}">
                     <p>{{ $tweet->body }}</p>
                     <div class="info">
                         Posted by {{ Auth::user()->username }} on {{ $tweet->created_at->toFormaTtedDateString() }}
                     </div>
                     <div class="interaction">
-                        <a href="">Like</a> |
-                        @if(Auth::user()->id == $tweet->userId) |
+                        <a href="#" class="like">{{ Auth::user()->likes()->where('tweet_id', $tweet->id)->first() ? 'DisLike' : 'Like' }}</a> |
+                        @if(Auth::user()->id == $tweet->userId)
                         <a href="{{ route('get.edit.tweet',['tweetId' => $tweet->id]) }}">Edit</a> |
                         <a href="{{ route('get.delete.tweet',['tweetId' => $tweet->id]) }}">Delete</a>
                         @endif
@@ -45,4 +45,9 @@
             @endforeach
         </div>
     </section>
+
+    <script>
+        var token = '{{ Session::token() }}';
+        var urlLike = '{{ route('like') }}';
+    </script>
 @endsection

@@ -105,7 +105,7 @@ Route::group(['middleware' => ['web']], function () {
         'middleware' => 'auth'
     ]);
 
-    Route::post('/create-tweet', [
+    Route::post('/edit_tweet', [
         'uses' => 'TweetController@PostEditTweet',
         'as' => 'post.edit.tweet',
         'middleware' => 'auth'
@@ -114,6 +114,12 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/delete_tweet/{tweetId}', [
         'uses' => 'TweetController@getDeleteTweet',
         'as' => 'get.delete.tweet',
+        'middleware' => 'auth'
+    ]);
+
+    Route::post('/like', [
+        'uses' => 'TweetController@postLikeTweet',
+        'as' => 'like',
         'middleware' => 'auth'
     ]);
 });

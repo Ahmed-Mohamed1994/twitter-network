@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Like;
 use App\Tweet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -49,5 +50,26 @@ class TweetController extends Controller
         }
         $tweet->delete();
         return redirect()->route('news-feed')->with(['message' => 'Tweet successfully deleted!']);
+    }
+
+    public function postLikeTweet(Request $request){
+        $tweet_id = $request['tweetId'];
+        $is_like_text = $request['isLikeText'];
+        $tweet = Tweet::where('id', $tweet_id)->first();
+        if(!$tweet){
+            return null;
+        }
+        $user = Auth::user();
+        $like = $user->likes()->where('tweet_id' , $tweet_id)->first();
+        if($like && $is_like_text=="DisLike"){
+            $like->delete();
+            return null;
+        }else{
+            $like = new Like();
+            $like->user_id = $user->id;
+            $like->tweet_id = $tweet->id;
+            $like->save();
+            return null;
+        }
     }
 }
