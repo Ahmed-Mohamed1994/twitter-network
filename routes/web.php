@@ -146,4 +146,10 @@ Route::group(['middleware' => ['web']], function () {
         'as' => 'get.delete.comment',
         'middleware' => 'auth'
     ]);
+
+    Route::get('/tweet/{tweetId}', [
+        'uses' => 'TweetController@getTweet',
+        'as' => 'get.tweet',
+        'middleware' => 'auth'
+    ]);
 });

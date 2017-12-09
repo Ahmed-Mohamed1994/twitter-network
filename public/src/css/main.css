@@ -56,3 +56,17 @@
     font-style: italic;
     font-size: 12px;
 }
+
+.likes-activity {
+    border: 1px solid #ddd;
+    background-color: #d0cece;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.mentions-activity {
+    border: 1px solid #ddd;
+    background-color: #d1dfff;
+    padding: 10px;
+    border-radius: 10px;
+}

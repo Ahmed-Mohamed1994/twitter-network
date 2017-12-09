@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Comment;
 use App\Follow;
+use App\Like;
+use App\mention;
 use App\Tweet;
 use App\User;
 use Illuminate\Http\Request;
@@ -143,7 +145,9 @@ class UserController extends Controller
     }
 
     public function getActivityFeed(){
-        return view('activity_feed');
+        $likes = Like::where(['user_id' => Auth::user()->id ])->get();
+        $mentions = mention::where(['mention_user_id' => Auth::user()->id ])->get();
+        return view('activity_feed',['likes' => $likes,'mentions' => $mentions]);
     }
 
     public function postSearchUsername(Request $request) {

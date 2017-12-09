@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Comment;
+use App\Follow;
 use App\Like;
 use App\mention;
 use App\Tweet;
@@ -23,6 +24,19 @@ class TweetController extends Controller
         if ($tweet->save()) {
             return redirect()->route('news-feed')->with(['message' => 'Your Tweet Successfully Created!']);
         }
+    }
+
+    public function getTweet(Tweet $tweetId)
+    {
+        if(Auth::user()->id != $tweetId->userId){
+            $followed_user = Follow::where(['userId'=> Auth::user()->id , 'Follow_userId' => $tweetId->userId])->first();
+            if(!$followed_user){
+                return redirect()->route('activity-feed')->with(['message_err' => 'You can\'t view this tweet!']);
+            }
+        }
+        $user_post = User::where('id', $tweetId->userId)->first();
+        $comments_tweet = Comment::where('tweet_id', $tweetId->id)->get();
+        return view('tweet')->with(['tweet' => $tweetId, 'comments' => $comments_tweet, 'user_post' => $user_post]);
     }
 
     public function getEditTweet(Tweet $tweetId)
@@ -100,14 +114,17 @@ class TweetController extends Controller
             if($get_username != ""){
                 $mention_user = User::where('username' , $get_username)->first();
                 if($mention_user){
-                    $last_comment_id = $comment->id;
-                    $new_mention = new mention();
-                    $new_mention->user_id = $user->id;
-                    $new_mention->mention_user_id = $mention_user->id;
-                    $new_mention->tweet_id = $tweet_id;
-                    $new_mention->comment_id = $last_comment_id;
-                    $new_mention->mention_username = $mention_user->username;
-                    $new_mention->save();
+                    $get_follow_user = Follow::where(['userId' => $user->id , 'Follow_userId' => $mention_user->id])->first();
+                    if($get_follow_user){
+                        $last_comment_id = $comment->id;
+                        $new_mention = new mention();
+                        $new_mention->user_id = $user->id;
+                        $new_mention->mention_user_id = $mention_user->id;
+                        $new_mention->tweet_id = $tweet_id;
+                        $new_mention->comment_id = $last_comment_id;
+                        $new_mention->mention_username = $mention_user->username;
+                        $new_mention->save();
+                    }
                 }
             }
         }
@@ -145,13 +162,16 @@ class TweetController extends Controller
                 $mention_user = User::where('username' , $get_username)->first();
                 $user = Auth::user();
                 if($mention_user){
-                    $new_mention = new mention();
-                    $new_mention->user_id = $user->id;
-                    $new_mention->mention_user_id = $mention_user->id;
-                    $new_mention->tweet_id = $comment->tweet_id;
-                    $new_mention->comment_id = $comment->id;
-                    $new_mention->mention_username = $mention_user->username;
-                    $new_mention->save();
+                    $get_follow_user = Follow::where(['userId' => $user->id , 'Follow_userId' => $mention_user->id])->first();
+                    if($get_follow_user) {
+                        $new_mention = new mention();
+                        $new_mention->user_id = $user->id;
+                        $new_mention->mention_user_id = $mention_user->id;
+                        $new_mention->tweet_id = $comment->tweet_id;
+                        $new_mention->comment_id = $comment->id;
+                        $new_mention->mention_username = $mention_user->username;
+                        $new_mention->save();
+                    }
                 }
             }
         }
