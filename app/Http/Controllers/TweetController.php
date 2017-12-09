@@ -51,6 +51,12 @@ class TweetController extends Controller
         if (Auth::user()->id != $tweet->userId) {
             return redirect()->back();
         }
+        $get_comments = Comment::where('tweet_id', $tweet->id)->get();
+        foreach ($get_comments as $current_comment){
+            mention::where('comment_id', $current_comment->id)->delete();
+        }
+        Comment::where('tweet_id', $tweet->id)->delete();
+        Like::where('tweet_id', $tweet->id)->delete();
         $tweet->delete();
         return redirect()->route('news-feed')->with(['message' => 'Tweet successfully deleted!']);
     }
@@ -88,19 +94,21 @@ class TweetController extends Controller
         $comment->user_id = $user->id;
         $comment->comment = $comment_body;
         $comment->save();
-        $explode_at = explode("@", $comment_body ) ;
-        $get_username = explode(" ", $explode_at[1] );
-        if($get_username != ""){
-            $mention_user = User::where('username' , $get_username)->first();
-            if($mention_user){
-                $last_comment_id = $comment->id;
-                $new_mention = new mention();
-                $new_mention->user_id = $user->id;
-                $new_mention->mention_user_id = $mention_user->id;
-                $new_mention->tweet_id = $tweet_id;
-                $new_mention->comment_id = $last_comment_id;
-                $new_mention->mention_username = $mention_user->username;
-                $new_mention->save();
+        if(strpos($comment_body, "@") !== false ){
+            $explode_at = explode("@", $comment_body ) ;
+            $get_username = explode(" ", $explode_at[1] );
+            if($get_username != ""){
+                $mention_user = User::where('username' , $get_username)->first();
+                if($mention_user){
+                    $last_comment_id = $comment->id;
+                    $new_mention = new mention();
+                    $new_mention->user_id = $user->id;
+                    $new_mention->mention_user_id = $mention_user->id;
+                    $new_mention->tweet_id = $tweet_id;
+                    $new_mention->comment_id = $last_comment_id;
+                    $new_mention->mention_username = $mention_user->username;
+                    $new_mention->save();
+                }
             }
         }
         return redirect()->route('news-feed')->with(['message' => "Comment successfully Added!"]);
@@ -124,28 +132,41 @@ class TweetController extends Controller
         }
         $comment->comment = $comment_body;
         $comment->update();
-        $explode_at = explode("@", $comment_body ) ;
-        $get_username = explode(" ", $explode_at[1] );
-        if($get_username != ""){
-            $get_mention_comment = mention::where('comment_id' , $comment->id)->first();
-            if($get_mention_comment){
-                if($get_mention_comment->mention_username != $get_username){
-                    $get_mention_comment->delete();
+        if(strpos($comment_body, "@") !== false ){
+            $explode_at = explode("@", $comment_body ) ;
+            $get_username = explode(" ", $explode_at[1] );
+            if($get_username != ""){
+                $get_mention_comment = mention::where('comment_id' , $comment->id)->first();
+                if($get_mention_comment){
+                    if($get_mention_comment->mention_username != $get_username){
+                        $get_mention_comment->delete();
+                    }
                 }
-            }
-            $mention_user = User::where('username' , $get_username)->first();
-            $user = Auth::user();
-            if($mention_user){
-                $new_mention = new mention();
-                $new_mention->user_id = $user->id;
-                $new_mention->mention_user_id = $mention_user->id;
-                $new_mention->tweet_id = $comment->tweet_id;
-                $new_mention->comment_id = $comment->id;
-                $new_mention->mention_username = $mention_user->username;
-                $new_mention->save();
+                $mention_user = User::where('username' , $get_username)->first();
+                $user = Auth::user();
+                if($mention_user){
+                    $new_mention = new mention();
+                    $new_mention->user_id = $user->id;
+                    $new_mention->mention_user_id = $mention_user->id;
+                    $new_mention->tweet_id = $comment->tweet_id;
+                    $new_mention->comment_id = $comment->id;
+                    $new_mention->mention_username = $mention_user->username;
+                    $new_mention->save();
+                }
             }
         }
 
         return redirect()->route('news-feed')->with(['message' => 'Your tweet Successfully Updated!']);
+    }
+
+    public function getDeleteComment($commentId)
+    {
+        $comment = Comment::where('id', $commentId)->first();
+        if (Auth::user()->id != $comment->user_id) {
+            return redirect()->back();
+        }
+        mention::where('comment_id', $commentId)->delete();
+        $comment->delete();
+        return redirect()->route('news-feed')->with(['message' => 'Comment successfully deleted!']);
     }
 }

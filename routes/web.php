@@ -140,4 +140,10 @@ Route::group(['middleware' => ['web']], function () {
         'as' => 'post.edit.comment',
         'middleware' => 'auth'
     ]);
+
+    Route::get('/delete_comment/{commentId}', [
+        'uses' => 'TweetController@getDeleteComment',
+        'as' => 'get.delete.comment',
+        'middleware' => 'auth'
+    ]);
 });
