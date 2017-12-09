@@ -128,4 +128,16 @@ Route::group(['middleware' => ['web']], function () {
         'as' => 'comment.add',
         'middleware' => 'auth'
     ]);
+
+    Route::get('/edit_comment/{commentId}', [
+        'uses' => 'TweetController@getEditComment',
+        'as' => 'get.edit.comment',
+        'middleware' => 'auth'
+    ]);
+
+    Route::post('/edit_comment', [
+        'uses' => 'TweetController@PostEditComment',
+        'as' => 'post.edit.comment',
+        'middleware' => 'auth'
+    ]);
 });

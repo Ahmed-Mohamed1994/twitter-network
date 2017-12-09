@@ -68,7 +68,7 @@
                                         <div class="interaction">
 
                                             @if($comment->user == Auth::user())
-                                                <a href="#">Edit</a> |
+                                                <a href="{{ route('get.edit.comment',['commentId' => $comment->id]) }}">Edit</a> |
                                                 <a href="">Delete</a>
                                             @endif
                                         </div>

@@ -105,4 +105,47 @@ class TweetController extends Controller
         }
         return redirect()->route('news-feed')->with(['message' => "Comment successfully Added!"]);
     }
+
+    public function getEditComment(Comment $commentId)
+    {
+        return view('edit_comment')->with(['comment' => $commentId]);
+    }
+
+    public function PostEditComment(Request $request)
+    {
+        $this->validate($request, [
+            'new-comment' => 'required|max:1000'
+        ]);
+        $comment_body = $request['new-comment'];
+        $comment_id = $request['comment_id'];
+        $comment = Comment::find($comment_id);
+        if (!$comment) {
+            return redirect()->back()->with(['message_err' => 'Comment Not Found!']);
+        }
+        $comment->comment = $comment_body;
+        $comment->update();
+        $explode_at = explode("@", $comment_body ) ;
+        $get_username = explode(" ", $explode_at[1] );
+        if($get_username != ""){
+            $get_mention_comment = mention::where('comment_id' , $comment->id)->first();
+            if($get_mention_comment){
+                if($get_mention_comment->mention_username != $get_username){
+                    $get_mention_comment->delete();
+                }
+            }
+            $mention_user = User::where('username' , $get_username)->first();
+            $user = Auth::user();
+            if($mention_user){
+                $new_mention = new mention();
+                $new_mention->user_id = $user->id;
+                $new_mention->mention_user_id = $mention_user->id;
+                $new_mention->tweet_id = $comment->tweet_id;
+                $new_mention->comment_id = $comment->id;
+                $new_mention->mention_username = $mention_user->username;
+                $new_mention->save();
+            }
+        }
+
+        return redirect()->route('news-feed')->with(['message' => 'Your tweet Successfully Updated!']);
+    }
 }
