@@ -112,7 +112,20 @@ class UserController extends Controller
     }
 
     public function getDashboard(){
-        return view('dashboard');
+        // get following users
+        $user_followed = Follow::where(['userId' => Auth::user()->id ])->get();
+        $tweets_of_following_users = array();
+        $following_users = array();
+        foreach ($user_followed as $user_select){
+            $get_user= User::where(['id' => $user_select->Follow_userId ])->first();
+            array_push($following_users, $get_user);
+        }
+        foreach ($user_followed as $tweets_of_user){
+            $get_tweets = Tweet::where(['userId' => $tweets_of_user->Follow_userId ])->get();
+            array_push($tweets_of_following_users, $get_tweets);
+        }
+        $comments = Comment::all();
+        return view('dashboard', ['tweets_of_following_users' => $tweets_of_following_users, 'following_users' => $following_users , 'comments' => $comments]);
     }
 
     public function getNewsFeed(){

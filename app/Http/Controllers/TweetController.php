@@ -21,7 +21,7 @@ class TweetController extends Controller
         $tweet->body = $request['new-tweet'];
         $tweet->userId = Auth::user()->id;
         if ($tweet->save()) {
-            return redirect()->route('dashboard')->with(['message' => 'Your Tweet Successfully Created!']);
+            return redirect()->route('news-feed')->with(['message' => 'Your Tweet Successfully Created!']);
         }
     }
 
