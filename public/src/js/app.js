@@ -1,6 +1,6 @@
 $('.like').on('click', function (event) {
     event.preventDefault();
-    var tweetId = event.target.parentNode.parentNode.dataset['tweetid'];
+    var tweetId = event.target.parentNode.parentNode.parentNode.dataset['tweetid'];
     var isLikeText = event.target.innerText;
     // console.log(isLikeText);
     $.ajax({
@@ -14,11 +14,5 @@ $('.like').on('click', function (event) {
             }else{
                 event.target.innerText = 'Like'
             }
-            /*event.target.innerText = isLike ? event.target.innerText == 'Like' ? 'You like this post' : 'Like' : event.target.innerText == 'Dislike' ? 'You don\'t like this post' : 'Dislike';
-            if(isLike){
-                event.target.nextElementSibling.innerText = 'Dislike';
-            }else {
-                event.target.previousElementSibling.innerText = 'Like';
-            }*/
         });
 });

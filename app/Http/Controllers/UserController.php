@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Comment;
 use App\Follow;
 use App\Tweet;
 use App\User;
@@ -124,7 +125,8 @@ class UserController extends Controller
         }
         // get my own tweets
         $tweets = Tweet::where(['userId' => Auth::user()->id ])->orderBy('created_at' , 'desc')->get();
-        return view('news_feed', ['following_users' => $following_users , 'tweets' => $tweets]);
+        $comments = Comment::all();
+        return view('news_feed', ['following_users' => $following_users , 'tweets' => $tweets, 'comments' => $comments]);
     }
 
     public function getActivityFeed(){

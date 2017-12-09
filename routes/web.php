@@ -122,4 +122,10 @@ Route::group(['middleware' => ['web']], function () {
         'as' => 'like',
         'middleware' => 'auth'
     ]);
+
+    Route::post('/add-comment', [
+        'uses' => 'TweetController@postAddComment',
+        'as' => 'comment.add',
+        'middleware' => 'auth'
+    ]);
 });

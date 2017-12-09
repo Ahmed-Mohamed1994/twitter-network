@@ -31,3 +31,28 @@
     color: #aaa;
     font-style: italic;
 }
+
+.image-comment , .image-post {
+    width: 64px;
+    height: 64px;
+}
+
+.comment {
+    border: 1px solid #ddd;
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-radius: 10px;
+}
+.comment p{
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.form_comment{
+    margin-top: 15px;
+}
+.comment_time{
+    color: #aaa;
+    font-style: italic;
+    font-size: 12px;
+}

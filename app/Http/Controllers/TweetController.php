@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Comment;
 use App\Like;
+use App\mention;
 use App\Tweet;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -71,5 +74,35 @@ class TweetController extends Controller
             $like->save();
             return null;
         }
+    }
+
+    public function postAddComment(Request $request){
+        $this->validate($request,[
+            'tweet_comment' => 'required|max:1000'
+        ]);
+        $tweet_id = $request['tweet_comment_id'];
+        $comment_body = $request['tweet_comment'];
+        $user = Auth::user();
+        $comment = new Comment();
+        $comment->tweet_id = $tweet_id;
+        $comment->user_id = $user->id;
+        $comment->comment = $comment_body;
+        $comment->save();
+        $explode_at = explode("@", $comment_body ) ;
+        $get_username = explode(" ", $explode_at[1] );
+        if($get_username != ""){
+            $mention_user = User::where('username' , $get_username)->first();
+            if($mention_user){
+                $last_comment_id = $comment->id;
+                $new_mention = new mention();
+                $new_mention->user_id = $user->id;
+                $new_mention->mention_user_id = $mention_user->id;
+                $new_mention->tweet_id = $tweet_id;
+                $new_mention->comment_id = $last_comment_id;
+                $new_mention->mention_username = $mention_user->username;
+                $new_mention->save();
+            }
+        }
+        return redirect()->route('news-feed')->with(['message' => "Comment successfully Added!"]);
     }
 }
