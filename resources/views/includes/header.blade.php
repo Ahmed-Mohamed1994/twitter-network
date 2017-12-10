@@ -10,15 +10,22 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{{ route('dashboard') }}">Dashboard</a>
+                @if(Auth::user())
+                    <a class="navbar-brand" href="{{ route('dashboard') }}">Dashboard</a>
+                @endif
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li @if(Request::path() == 'news_feed') class="active" @endif><a href="{{ route('news-feed') }}">News Feed</a></li>
-                    <li @if(Request::path() == 'activity_feed') class="active" @endif><a href="{{ route('activity-feed') }}">Activity Feed</a></li>
-                </ul>
+                @if(Auth::user())
+                    <ul class="nav navbar-nav">
+                        <li @if(Request::path() == 'news_feed') class="active" @endif><a
+                                    href="{{ route('news-feed') }}">News
+                                Feed</a></li>
+                        <li @if(Request::path() == 'activity_feed') class="active" @endif><a
+                                    href="{{ route('activity-feed') }}">Activity Feed</a></li>
+                    </ul>
+                @endif
                 <ul class="nav navbar-nav navbar-right">
                     @if(Auth::user())
                         <li><a href="{{ route('account') }}">Account</a></li>

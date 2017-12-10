@@ -46,4 +46,13 @@
             </form>
         </div>
     </div>
+    <hr>
+    <section>
+        <h1>Login With Facebook</h1>
+        <div class="row">
+            <div class="account-view-btn text-center">
+                <a class="btn btn-primary" href="{{ route('login.facebook') }}">Login With Facebook</a>
+            </div>
+        </div>
+    </section>
 @endsection

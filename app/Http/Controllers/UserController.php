@@ -105,7 +105,7 @@ class UserController extends Controller
         if ($file) {
             Storage::disk('local')->put($filename, File::get($file));
         }
-        return redirect()->route('account')->with(['message' => 'Successfully updated!']);;
+        return redirect()->route('account')->with(['message' => 'Successfully updated!']);
     }
 
     public function getUserImage($filename){

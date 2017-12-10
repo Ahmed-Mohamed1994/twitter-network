@@ -152,4 +152,11 @@ Route::group(['middleware' => ['web']], function () {
         'as' => 'get.tweet',
         'middleware' => 'auth'
     ]);
+
+    // login facebook with Socialite
+    Route::get('login/facebook', [
+        'uses' => 'Auth\LoginController@redirectToProvider',
+        'as' => 'login.facebook'
+    ]);
+    Route::get('login/facebook/callback', 'Auth\LoginController@handleProviderCallback');
 });
