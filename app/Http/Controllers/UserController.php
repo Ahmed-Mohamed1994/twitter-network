@@ -186,4 +186,24 @@ class UserController extends Controller
         $followed_this_user->delete();
         return redirect()->route('user.account',['userId' => $userId])->with(['message' => 'Your are un follow this user']);
     }
+
+    // search by al Algolia
+    public function getSearchAlgolia(){
+        return view('search_algolia');
+    }
+
+    public function PostSearchAlgolia(Request $request){
+        $this->validate($request, [
+            'searchKey' => 'required|max:250|alpha_dash'
+        ],[
+            'searchKey.alpha_dash' => 'The Search Key may only contain letters, numbers, underscore, and dashes.',
+        ]);
+        $searchKey = $request['searchKey'];
+        $search_users = User::search($searchKey)->get();
+        if($search_users){
+            return view('account_search_algolia' , ['search_users' => $search_users]);
+        }else{
+            return redirect()->route('get.search.algolia')->with(['message_err' => 'Search Key Not Found!']);
+        }
+    }
 }

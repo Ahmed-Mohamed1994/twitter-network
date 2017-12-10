@@ -4,10 +4,13 @@ namespace App;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class User extends Model implements Authenticatable
 {
     use \Illuminate\Auth\Authenticatable;
+
+    use Searchable;
 
     public function follows(){
         return $this->hasMany('App\Follow');
@@ -27,5 +30,10 @@ class User extends Model implements Authenticatable
 
     public function mentions(){
         return $this->hasMany('App\mention');
+    }
+
+    public function searchableAs()
+    {
+        return 'username';
     }
 }

@@ -159,4 +159,17 @@ Route::group(['middleware' => ['web']], function () {
         'as' => 'login.facebook'
     ]);
     Route::get('login/facebook/callback', 'Auth\LoginController@handleProviderCallback');
+
+    // search by al Algolia
+    Route::get('/search-algolia', [
+        'uses' => 'UserController@getSearchAlgolia',
+        'as' => 'get.search.algolia',
+        'middleware' => 'auth'
+    ]);
+
+    Route::post('/search-algolia', [
+        'uses' => 'UserController@PostSearchAlgolia',
+        'as' => 'post.search.algolia',
+        'middleware' => 'auth'
+    ]);
 });

@@ -24,6 +24,8 @@
                                 Feed</a></li>
                         <li @if(Request::path() == 'activity_feed') class="active" @endif><a
                                     href="{{ route('activity-feed') }}">Activity Feed</a></li>
+                        <li @if(Request::path() == 'search-algolia') class="active" @endif><a
+                                    href="{{ route('get.search.algolia') }}">Search Algolia</a></li>
                     </ul>
                 @endif
                 <ul class="nav navbar-nav navbar-right">
