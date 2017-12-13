@@ -41,6 +41,9 @@ class TweetController extends Controller
 
     public function getEditTweet(Tweet $tweetId)
     {
+        if(Auth::user()->id != $tweetId->userId){
+            return redirect()->back()->with(['message_err' => 'Please Update Your Tweets Only!']);
+        }
         return view('edit_tweet')->with(['tweet' => $tweetId]);
     }
 
@@ -53,6 +56,9 @@ class TweetController extends Controller
         $tweet = Tweet::find($tweet_id);
         if (!$tweet) {
             return redirect()->back()->with(['message_err' => 'Tweet Not Found!']);
+        }
+        if(Auth::user()->id != $tweet->userId){
+            return redirect()->back();
         }
         $tweet->body = $request['new-tweet'];
         $tweet->update();
@@ -133,6 +139,9 @@ class TweetController extends Controller
 
     public function getEditComment(Comment $commentId)
     {
+        if(Auth::user()->id != $commentId->user_id){
+            return redirect()->back()->with(['message_err' => 'Please Update Your Comments Only!']);
+        }
         return view('edit_comment')->with(['comment' => $commentId]);
     }
 
@@ -146,6 +155,9 @@ class TweetController extends Controller
         $comment = Comment::find($comment_id);
         if (!$comment) {
             return redirect()->back()->with(['message_err' => 'Comment Not Found!']);
+        }
+        if(Auth::user()->id != $comment->user_id){
+            return redirect()->back();
         }
         $comment->comment = $comment_body;
         $comment->update();

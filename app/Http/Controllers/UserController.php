@@ -77,11 +77,6 @@ class UserController extends Controller
         ],[
             'username.alpha_dash' => 'The username may only contain letters, numbers, underscore, and dashes.',
         ]);
-        $file_exists = Storage::disk('local')->exists($user->username . '-' . $user->id . '.jpg');
-        if ($user->username != $request['username'] && $file_exists) {
-            Storage::copy($user->username . '-' . $user->id . '.jpg', $request['username'] . '-' . $user->id . '.jpg');
-            Storage::delete($user->username . '-' . $user->id . '.jpg');
-        }
         $password = $user->password;
         if ($request['old_password'] != "" || $request['new_password'] != "") {
             if (Hash::check($request['old_password'], $user->password)) {
@@ -95,17 +90,27 @@ class UserController extends Controller
         } elseif ($request['old_password'] != "" && $request['new_password'] == "") {
             return redirect()->route('account')->with(['message_err' => 'New Password Required To Update']);
         }
+        $old_username = $user->username;
         $user->username = $request['username'];
         $user->name = $request['name'];
         $user->email = $request['email'];
         $user->password = $password;
-        $user->update();
-        $file = $request->file('image');
-        $filename = $request['username'] . '-' . $user->id . '.jpg';
-        if ($file) {
-            Storage::disk('local')->put($filename, File::get($file));
+        if($user->update()){
+            $file_exists = Storage::disk('local')->exists($old_username . '-' . $user->id . '.jpg');
+            if($old_username != $request['username'] && $file_exists){
+                Storage::copy($old_username . '-' . $user->id . '.jpg', $request['username'] . '-' . $user->id . '.jpg');
+                Storage::delete($old_username . '-' . $user->id . '.jpg');
+            }
+            $file = $request->file('image');
+            $filename = $request['username'] . '-' . $user->id . '.jpg';
+            if ($file) {
+                if($file_exists){
+                    Storage::delete($old_username . '-' . $user->id . '.jpg');
+                }
+                Storage::disk('local')->put($filename, File::get($file));
+            }
+            return redirect()->route('account')->with(['message' => 'Successfully updated!']);
         }
-        return redirect()->route('account')->with(['message' => 'Successfully updated!']);
     }
 
     public function getUserImage($filename){
